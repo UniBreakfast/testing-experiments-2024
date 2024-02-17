@@ -36,16 +36,13 @@ const testSuite = {
       getSelect() { },
       createOptions() { },
       getOptions() { },
-      replaceOptions() { },
       addOptions() { },
       removeOptions() { },
       selectOption() { },
-      getSelected() { },
       hideOptions() { },
       showOptions() { },
       markOptions() { },
       unmarkOptions() { },
-      getMarked() { },
       setMark() { },
       getMark() { },
     };
@@ -105,6 +102,8 @@ const testSuite = {
       throw new Error('Options were not created correctly or method did not replace them');
     }
   },
+
+  getsOptions() {},
 }
 
 getReady().then(
