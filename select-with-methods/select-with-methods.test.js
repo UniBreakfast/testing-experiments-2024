@@ -1,199 +1,210 @@
-// import { selectWithMethods as swm } from './swm.js';
-let swm = import('./swm.js');
+import { runTests, ErrorWithArgs, areCloneLike } from '../test.js';
 
-console.log('swm is selectWithMethods');
+console.log('"swm" means "Select With Methods"');
 
-const testSuite = {
-  thereIsOneSelect() {
-    if (document.querySelectorAll('select').length != 1) {
-      throw new Error('There should be one select element');
-    }
-  },
+const delay = 500;
 
-  selectIsVisible() {
-    const select = document.querySelector('select');
-    const computedStyle = getComputedStyle(select);
-
-    if (
-      computedStyle.display == 'none'
-      || computedStyle.visibility == 'hidden'
-      || computedStyle.opacity < 0.1
-      || select.offsetWidth < 1
-      || select.offsetHeight < 1
-    ) {
-      throw new Error('Select should be visible');
-    }
-  },
-
-  swmObjectIsImported() {
-    if (!swm || typeof swm != 'object') {
-      throw new Error('swm object should be imported');
-    }
-  },
-
-  swmHasMethods() {
-    const swmBeLike = {
-      getSelect() { },
-      createOptions() { },
-      getOptions() { },
-      addOptions() { },
-      removeOptions() { },
-      selectOption() { },
-      hideOptions() { },
-      showOptions() { },
-      markOptions() { },
-      unmarkOptions() { },
-      setMark() { },
-      getMark() { },
-    };
-
-    for (const method in swmBeLike) {
-      if (!swm[method] || typeof swm[method] != 'function') {
-        throw new Error(`swm should have a method ${method}()`);
+import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
+  const testSuite = {
+    swmObjectIsImported() {
+      if (!swm || typeof swm != 'object') {
+        throw complaint(
+          'swm was not imported correctly',
+          'expected an object with methods but instead got',
+          swm,
+        );
       }
-    }
+    },
 
-    for (const method in swm) {
-      if (!swmBeLike[method] || typeof swmBeLike[method] != 'function') {
-        throw new Error(`swm should not have a method ${method}()`);
+    swmHasMethods() {
+      const swmBeLike = {
+        setSelect() { },
+        createOptions() { },
+        addOptions() { },
+        getValue() { },
+      };
+
+      for (const method in swmBeLike) {
+        if (!swm[method] || typeof swm[method] != 'function') {
+          throw complaint(
+            `swm should have a method ${method}().`,
+            'instead it looks like this',
+            swm,
+          );
+        }
       }
-    }
 
-    if (Object.keys(swm).length != Object.keys(swmBeLike).length) {
-      throw new Error('swm should not have any extra properties or methods');
-    }
-  },
+      for (const key in swm) {
+        if (typeof swm[key] == 'function' && !swmBeLike[key]) {
+          throw complaint(
+            `swm has an unexpected method ${key}().`,
+            'unexpected method',
+            swm[key],
+          );
+        }
 
-  getSelectReturnsSelect() {
-    const select = swm.getSelect();
-
-    if (select.localName != 'select') {
-      throw new Error('getSelect() should return a select element');
-    }
-  },
-
-  createsOptionsAndReturnsThem() {
-    const dict = { a: 'Alpha', b: 'Beta', c: 'Charlie' };
-
-    const options = swm.createOptions({ dict });
-    const entries = Object.entries(dict);
-
-    const allOptionsCreatedCorrectly = entries.length == options?.length && entries
-      .every(([value, text], i) => options[i].value == value && options[i].text == text);
-
-    if (!allOptionsCreatedCorrectly) {
-      throw new Error('Options were not created correctly or method did not return them');
-    }
-  },
-
-  createsOptionsAndReplacesWithThem() {
-    const dict = { b: 'Beta', c: 'Charlie', d: 'Delta' };
-
-    const select = swm.getSelect();
-
-    swm.createOptions({ dict, replace: true });
-
-    const options = select.options;
-    const entries = Object.entries(dict);
-
-    const allOptionsCreatedCorrectly = entries.length == options?.length && entries.every(([value, text], i) => options[i].value == value && options[i].text == text);
-
-    if (!allOptionsCreatedCorrectly) {
-      throw new Error('Options were not created correctly or method did not replace them');
-    }
-  },
-
-  getsOptions() {},
-}
-
-getReady().then(
-  () => setTimeout(runTests, 500)
-);
-
-async function getReady() {
-  String.prototype.if = String.prototype.repeat;
-
-  return {swm} = await swm;
-}
-
-async function runTests() {
-  const passedTests = {};
-  const failedTests = {};
-  const skippedTests = {};
-
-  const onlyCases = Object.keys(testSuite).filter(testCase => testCase[0] == '$');
-
-  if (onlyCases.length) {
-    for (const testCase in testSuite) {
-      if (testCase[0] != '$') {
-        skippedTests[testCase] = testSuite[testCase];
-        delete testSuite[testCase];
+        if (typeof swm[key] != 'function' && !swmBeLike[key]) {
+          throw complaint(
+            `swm has an unexpected property ${key}.`,
+            `unexpected property swm["${key}"]`,
+            swm[key],
+          );
+        }
       }
-    }
+    },
+
+    createOptionsTakesItemsAndReturnsOptions() {
+      const items = [{ value: 'a', text: 'Alpha' }, { value: 'b', text: 'Bravo' }, { value: 'c', text: 'Charlie' }];
+
+      const options = swm.createOptions({ items });
+
+      reset();
+
+      if (!Array.isArray(options)) {
+        throw new ErrorWithArgs('swm.createOptions() should return an array', options);
+      }
+
+      if (options.length != items.length) {
+        throw new ErrorWithArgs('swm.createOptions() should return an array with the same number of items as the input', options.length, items.length);
+      }
+
+      for (const option of options) {
+        if (option.tagName != 'OPTION') {
+          throw new ErrorWithArgs('swm.createOptions() should return an array of option elements', options, option);
+        }
+
+        if (!option.value || !option.text) {
+          throw new ErrorWithArgs('swm.createOptions() should return an array of option elements with correct value and text properties', options, option, { value: option.value, text: option.text });
+        }
+      }
+    },
+
+    addOptionsThrowsWithoutSelect() {
+      const options = [new Option(), new Option()]
+
+      try {
+        swm.addOptions(options);
+
+        throw null;
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.addOptions() should throw an error if no select is set');
+        }
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.addOptions() should throw an error with the message "No select set"', err);
+        }
+      } finally {
+        reset();
+      }
+    },
+
+    setSelectWithoutArgumentsThrows() {
+      try {
+        swm.setSelect();
+
+        throw null;
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.setSelect() should throw an error if no select is passed');
+        }
+        if (err.message != 'No select passed') {
+          throw new ErrorWithArgs('swm.setSelect() should throw an error with the message "No select passed"', err);
+        }
+      } finally {
+        reset();
+      }
+    },
+
+    setSelectWithArgumentDoesNotThrow() {
+      const select = document.createElement('select');
+
+      try {
+        swm.setSelect(select);
+      } catch (err) {
+        throw new ErrorWithArgs('swm.setSelect() should not throw an error if a select is passed', err);
+      } finally {
+        reset();
+      }
+    },
+
+    setSelectSetsSelect() {
+      const select = document.createElement('select');
+      const options = [new Option(), new Option()]
+
+      swm.setSelect(select);
+
+      try {
+        swm.addOptions(options);
+      } catch (err) {
+        if (err.message == 'No select set') {
+          throw new Error('swm.setSelect() should set the select');
+        }
+      } finally {
+        reset();
+      }
+    },
+
+    addOptionsAppends() {
+      const select = document.createElement('select');
+      const options = [new Option('a', 'Alpha'), new Option('b', 'Bravo')];
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions(options);
+
+        if (select.children.length != options.length) throw null;
+      } catch (err) {
+        if (!err) {
+          throw new ErrorWithArgs('swm.addOptions() should append all the options to the select', select.children, 'where should be', options);
+        }
+        throw new ErrorWithArgs('swm.addOptions() should append the options to the select', err);
+      } finally {
+        reset();
+      }
+    },
+
+    getValueThrowsWithoutSelect() {
+      try {
+        swm.getValue();
+
+        throw null;
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.getValue() should throw an error if no select is set');
+        }
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.getValue() should throw an error with the message "No select set"', err);
+        }
+      } finally {
+        reset();
+      }
+    },
+
+    getValueReturnsValue() {
+      const select = document.createElement('select');
+      const options = [new Option('a', 'Alpha'), new Option('b', 'Bravo')];
+      const value = options[0].value;
+
+      swm.setSelect(select);
+      swm.addOptions(options);
+
+      const result = swm.getValue();
+
+      reset();
+      
+      if (result != value) {
+        reset();
+        throw new ErrorWithArgs('swm.getValue() should return the value of the selected option', result, 'where should be', value);
+      }
+    },
   }
 
-  for (const testCase in testSuite) {
-    if (testCase[0] == '_') {
-      skippedTests[testCase] = testSuite[testCase];
-      continue;
-    }
+  runTests(testSuite, delay);
+});
 
-    const test = testSuite[testCase];
-
-    try {
-      await test();
-
-      passedTests[testCase] = test;
-    } catch (error) {
-      failedTests[testCase] = test;
-      test.error = error.message;
-    }
-  }
-
-  const passedTestsCount = Object.keys(passedTests).length;
-  const failedTestsCount = Object.keys(failedTests).length;
-  const skippedTestsCount = Object.keys(skippedTests).length;
-  const totalTestsCount = passedTestsCount + failedTestsCount + skippedTestsCount;
-  const passedRatio = passedTestsCount / totalTestsCount;
-  const failedRatio = failedTestsCount / totalTestsCount;
-  const skippedRatio = skippedTestsCount / totalTestsCount;
-  const barLength = 40;
-  const passedBarLength = Math.round(passedRatio * barLength) || Math.ceil(passedRatio * barLength);
-  const failedBarLength = Math.round(failedRatio * barLength) || Math.ceil(failedRatio * barLength);
-  const skippedBarLength = Math.round(skippedRatio * barLength) || Math.ceil(skippedRatio * barLength);
-  const failedTestsRep = prepNames(failedTests).join('\n - ');
-  const passedTestsRep = prepNames(passedTests).join('\n + ');
-  const skippedTestsRep = prepNames(skippedTests).join('\n - ');
-
-  const successCountRep = passedTestsCount != totalTestsCount
-    ? `%b${passedTestsCount}%n of ` : '%bAll%c ';
-  const progressBarRep = `%l${'▒'.repeat(passedBarLength)
-    }%r${'▒'.repeat(failedBarLength)}%g${'▒'.repeat(skippedBarLength)}`;
-  const introRep = `${successCountRep}%b${totalTestsCount
-    }%n tests run successfully.\n`;
-  const passedRep = `\n\n%b${passedTestsCount
-    }%n %lpassed%n tests are:\n + ${passedTestsRep}`
-    .if(!!failedTestsCount && !!passedTestsCount);
-  const failedRep = `\n\n%b${failedTestsCount
-    }%n that %rfailed%n are:\n - ${failedTestsRep}`.if(!!failedTestsCount);
-  const skippedRep = `\n\n%b${skippedTestsCount
-    }%n tests were skipped:\n - ${skippedTestsRep}`.if(!!skippedTestsCount);
-  const report = introRep + progressBarRep + failedRep + passedRep + skippedRep;
-
-  console.log(...style(report));
-}
-
-function prepNames(testDict) {
-  return Object.entries(testDict).map(([name, { error }]) => `%u${name.replace(/([A-Z])/g, ' $1').replace(/_|\$/g, '').trim().toLowerCase()}%n` + `: %r${error}%n`.if(!!error));
-}
-
-function style(report) {
-  const styling = { '%n': '', '%b': 'font-weight: bold', '%u': 'text-decoration: underline', '%l': 'color: lime', '%r': 'color: red', '%g': 'color: gray' };
-  const styles = [];
-
-  return [report.replace(/%\w/g, match => styles.push(styling[match]) && '%c'), ...styles];
-}
-
-function areCloneLike(a, b) {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
+/*
+  setSelect (without arguments, with select)
+  createOptions (with items)
+  addOptions (without select, with options)
+  getValue (without select, with options)
+*/
