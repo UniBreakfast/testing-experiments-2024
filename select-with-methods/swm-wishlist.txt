@@ -7,11 +7,12 @@
   getSelect() - returns the сurrent select element
   getSelect() with no current select element - returns null
 
-!setSelect(select)
+*setSelect(select)
 
   setSelect() - throws an error
   setSelect(select) - sets it as the current select element
   setSelect(null) - forgets the current select element
+  setSelect(not a select element) - throws an error
 
 !hideSelect()
 !showSelect()
@@ -40,7 +41,7 @@
   replaceSelect(...elements) - replaces the current select element in the DOM with the elements
   remove/place/replaceSelect(...) with no current select element - throws an error
 
-!createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
+?createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
 
   createOptions()/(NaPI / NaO) - throws an error, NaPI - not a positive integer, NaO - not an object
   createOptions(PI) - creates and returns the specified number of options
@@ -95,7 +96,7 @@
   getOptions({any combination of selected, marked, hidden, value, text, index with any: true}) - returns the options satisfying any of the conditions
   getOptions({all: true, with any other condition}) - throws an error
 
-!addOptions(options, ?{ before, after, select, mark, hide })
+?addOptions(options, ?{ before, after, select, mark, hide })
 
   addOptions() with no current select element - throws an error
   addOptions()/({}) - throws an error
@@ -352,7 +353,7 @@
   removeOption({any combination of selected, marked, hidden, value, text, index with any: true}) - removes the option satisfying any of the conditions or throws an error if there is no such option
   removeOption({any: false}) - throws an error
 
-!getValue(?option, ?{ selected, marked, hidden, text, index, any })
+?getValue(?option, ?{ selected, marked, hidden, text, index, any })
 
   getValue() with no current select element - throws an error
   getValue()/({selected: true}) - returns the value of the selected option or null if there is no selected option
