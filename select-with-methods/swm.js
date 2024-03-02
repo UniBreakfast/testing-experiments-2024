@@ -24,14 +24,28 @@ const swm = {
 
     const dirKeys = ['before', 'after', 'select', 'mark', 'hide'];
 
-    if (arguments.length > 1 && (!directives || typeof directives != 'object' || Object.keys(directives).filter(key => dirKeys.includes(key)).length < 1)) {
+    const { before, after, select, mark, hide } = directives || {};
+
+    if (
+      arguments.length > 1 && (
+        !directives || 
+        typeof directives != 'object' || 
+        Object.keys(directives).filter(key => dirKeys.includes(key)).length < 1 || 
+        dirKeys.some(key => (key in directives) && ![true, 1].includes(directives[key])) || 
+        before && after ||
+        (select || mark) && hide  
+      )) {
       throw new Error('Incorrect directives argument is passed');
     }
 
-    const { before, after, select, mark, hide } = directives || {};
-
     if (before) s.prepend(...options);
     else s.append(...options);
+
+    if (select) s.value = options[0].value;
+
+    if (hide) {
+      for (const o of options) o.hidden = true;
+    }
   },
 
   getValue() {

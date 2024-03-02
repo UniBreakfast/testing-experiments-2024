@@ -223,22 +223,29 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
 
     addOptionsWithWrongSecondArgThrows({select}) {
       const options = [new Option];
-      const wrongArg = {};
+      const wrongArg1 = {};
+      const wrongArg2 = '{}';
+      const wrongArg3 = {before: false};
+      const wrongArg4 = {before: true, after: true};
+      const wrongArg5 = {select: true, hide: true};
 
-      try {
-        swm.setSelect(select);
-        swm.addOptions(options, wrongArg);
+      [wrongArg1, wrongArg2, wrongArg3, wrongArg4, wrongArg5].forEach(wrongArg => {
+        try {
+          swm.setSelect(select);
+          swm.addOptions(options, wrongArg);
+  
+          throw null;
 
-        throw null;
-      } catch (err) {
-        if (!err) {
-          throw new Error('swm.addOptions() should throw an error if incorrect directives argument is passed');
+        } catch (err) {
+          if (!err) {
+            throw new ErrorWithArgs('swm.addOptions() should throw an error if incorrect directives argument is passed', wrongArg);
+          }
+  
+          if (err.message != 'Incorrect directives argument is passed') {
+            throw new ErrorWithArgs('swm.addOptions() should throw an error with the message "Incorrect directives argument is passed"', wrongArg, err);
+          }
         }
-
-        if (err.message != 'Incorrect directives argument is passed') {
-          throw new ErrorWithArgs('swm.addOptions() should throw an error with the message "Incorrect directives argument is passed"', err);
-        }
-      }
+      });
     },
 
     addOptionsBefore({select}) {
@@ -256,13 +263,54 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         const correct = areCloneLike(children, expectedChildren);
         
         if (!correct) throw null;
+
       } catch (err) {
         if (!err) {
           throw new ErrorWithArgs('swm.addOptions() should prepend the options to the select', vOptions(select.children), 'where should be', expectedChildren);
         }
+
         throw new ErrorWithArgs('swm.addOptions() should prepend the options to the select', err);
       }
-    },    
+    },
+
+    addOptionsWithSelectDirective({select}) {
+      const oldOptions = [new Option('Alpha', 'a'), new Option('Bravo', 'b'), new Option('Charlie', 'c')];
+      const newOptions = [new Option('Delta', 'd'), new Option('Echo', 'e')];
+      const expected = 'd';
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions(oldOptions);
+        swm.addOptions(newOptions, { select: true });
+
+        if (select.value != expected) throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new ErrorWithArgs('swm.addOptions() should select the first option if the select directive is passed', 'selected', select.value, 'where should be', expected);
+        }
+
+        throw new ErrorWithArgs('swm.addOptions() should select the first option if the select directive is passed', err);
+      }
+    },
+
+    addOptionsWithHideDirective({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions(options, { hide: true });
+
+        if (options.some(o => !o.hidden)) throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.addOptions() should hide the added options if the hide directive is passed');
+        }
+
+        throw new ErrorWithArgs('swm.addOptions() should hide the options if the hide directive is passed', err);
+      }
+    },
 
     getValueThrowsWithoutSelect() {
       reset();
@@ -294,6 +342,16 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         throw new ErrorWithArgs('swm.getValue() should return the value of the selected option', result, 'where should be', value);
       }
     },
+  }  
+  
+  function setup() {
+    const select = document.createElement('select');
+    
+    return { select };
+  }
+
+  function teardown() {
+    reset();
   }
 
   runTests(testSuite, delay, { setup, teardown });
@@ -306,6 +364,6 @@ function vOptions(options) {
 /*
   setSelect (without arguments, with select, with null, with wrong argument)
   createOptions (with items)
-  addOptions (without select, with options, without options, with wrong options)
+  addOptions (without select, with options, without options, with wrong options, with wrong directives, with before, with select directive, with hide directive)
   getValue (without select, with options)
 */
