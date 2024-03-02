@@ -7,7 +7,7 @@ const allLogArgs = [];
 const sup = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 const sub = '₀₁₂₃₄₅₆₇₈₉';
 
-async function runTests(testSuite, delay = 0) {
+async function runTests(testSuite, delay = 0, {setup, teardown} = {}) {
   await pause(delay);
   
   const passedTests = {};
@@ -32,14 +32,21 @@ async function runTests(testSuite, delay = 0) {
     }
 
     const test = testSuite[testCase];
+    let startKit = {};
 
     try {
-      await test();
+      if (setup) startKit = await setup();
+
+      await test(startKit);
 
       passedTests[testCase] = test;
+
     } catch (error) {
       failedTests[testCase] = test;
       test.error = error.message;
+
+    } finally {
+      if (teardown) await teardown();
     }
   }
 
