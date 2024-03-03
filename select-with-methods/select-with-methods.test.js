@@ -25,6 +25,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         setMark() { },
         getMark() { },
         markOption() { },
+        unmarkOption() { },
       };
 
       for (const method in swmBeLike) {
@@ -538,6 +539,114 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         }
       }
     },
+
+    unmarkOptionWithoutSelectThrows() {
+      try {
+        swm.unmarkOption();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.unmarkOption() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.unmarkOption() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    unmarkOptionWithoutOptionsThrows({select}) {
+      try {
+        swm.setSelect(select);
+        swm.unmarkOption();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.unmarkOption() should throw an error if select has no options');
+        }
+
+        if (err.message != 'Select has no options') {
+          throw new ErrorWithArgs('swm.unmarkOption() should throw an error with the message "Select has no options"', err);
+        }
+      }
+    },
+
+    unmarkOptionWithoutOptionUnmarksFirstMarked({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+      const mark = { prefix: '✓ ' };
+      const expected1 = vOptions(options);
+      const expected2 = vOptions(options);
+
+      options[0].dataset.text = options[0].text;
+      options[0].dataset.mark = true;
+      options[0].text = mark.prefix + options[0].text;
+      options[1].dataset.text = options[1].text;
+      options[1].dataset.mark = true;
+      options[1].text = mark.prefix + options[1].text;
+
+      expected1[1][1] = mark.prefix + expected1[1][1];
+      
+      swm.setSelect(select);
+      swm.addOptions(options);
+      swm.setMark(mark);
+      swm.unmarkOption();
+
+      const received1 = vOptions(select.children);
+
+      swm.unmarkOption();
+
+      const received2 = vOptions(select.children);
+
+      if (!areCloneLike(received1, expected1) || !areCloneLike(received2, expected2)) {
+        throw new ErrorWithArgs('swm.unmarkOption() without option should unmark the first marked option', received1, 'where should be', expected1, 'and', received2, 'where should be', expected2);
+      }
+    },
+
+    unmarkOptionWithOptionUnmarks({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+      const mark = { prefix: '✓ ' };
+      const expected = vOptions(options);
+
+      options[1].dataset.text = options[1].text;
+      options[1].dataset.mark = true;
+      options[1].text = mark.prefix + options[1].text;
+
+      swm.setSelect(select);
+      swm.addOptions(options);
+      swm.setMark(mark);
+      swm.unmarkOption(options[1]);
+
+      const received = vOptions(select.children);
+
+      if (!areCloneLike(received, expected)) {
+        throw new ErrorWithArgs('swm.unmarkOption() with option should unmark the option', received, 'where should be', expected);
+      }
+    },
+
+    unmarkOptionWithWrongOptionThrows({select}) {
+      const wrongOption = document.createElement('div');
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions([new Option]);
+        swm.unmarkOption(wrongOption);
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.unmarkOption() should throw an error if a non-option is passed');
+        }
+
+        if (err.message != 'Correct option argument required (option element)') {
+          throw new ErrorWithArgs('swm.unmarkOption() should throw an error with the message "Correct option argument required (option element)"', err);
+        }
+      }
+    },
   }  
   
   function setup() {
@@ -565,4 +674,5 @@ function vOptions(options) {
   setMark (without prefix and postfix, with one or both)
   getMark (without prefix and postfix, with one or both)
   markOption (without select, without options, without mark, with mark, without option, with option, with wrong option)
+  unmarkOption (without select, without options, without option, with option, with wrong option)
 */

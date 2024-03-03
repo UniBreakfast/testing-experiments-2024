@@ -411,12 +411,12 @@
   getIndex({any combination of selected, marked, hidden, value, text with any: true}) - returns the index of the first option satisfying any of the conditions or -1 if there is no such option
   getIndex({any: false}) - throws an error
 
-! markOption(?option, ?{ selected, value, text, index, any })
+? markOption(?option, ?{ selected, value, text, index, any })
 
-  markOption() with no current select element - throws an error
-  markOption() - marks the first unmarked option if there is one
-  markOption() with no options - throws an error
-  markOption(option) - marks the specified option if it is in the select element or throws an error
+  * markOption() with no current select element - throws an error
+  * markOption() - marks the first unmarked option if there is one
+  * markOption() with no options - throws an error
+  * markOption(option) - marks the specified option if it is in the select element or throws an error
   markOption({selected: true}) - marks the selected option or throws an error if there is no selected option
   markOption({selected: false}) - marks the first unselected unmarked option or throws an error if there are no unselected options
   markOption({value: NaF}) - marks the unmarked option with the specified value as a string or throws an error if there is no such option

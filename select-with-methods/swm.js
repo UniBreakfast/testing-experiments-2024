@@ -76,15 +76,47 @@ const swm = {
       if (!(option instanceof HTMLOptionElement)) {
         throw new Error('Correct option argument required (option element)');
       }
-      
-      option.text = prefix + option.text + postfix;
+
+      if (option.dataset.mark) return;
+
+      option.dataset.text = option.text;
       option.dataset.mark = true;
+      option.text = prefix + option.text + postfix;
 
     } else {
       for (const o of s.options) {
         if (!o.dataset.mark) {
-          o.text = prefix + o.text + postfix;
+          o.dataset.text = o.text;
           o.dataset.mark = true;
+          o.text = prefix + o.text + postfix;
+          break;
+        }
+      }
+    }
+  },
+
+  unmarkOption(option) {
+    if (!s) throw new Error('No select set');
+
+    if (!s.options.length) throw new Error('Select has no options');
+
+    if (option) {
+      if (!(option instanceof HTMLOptionElement)) {
+        throw new Error('Correct option argument required (option element)');
+      }
+
+      if (!option.dataset.mark) return;
+
+      option.text = option.dataset.text;
+      delete option.dataset.text;
+      delete option.dataset.mark;
+
+    } else {
+      for (const o of s.options) {
+        if (o.dataset.mark) {
+          o.text = o.dataset.text;
+          delete o.dataset.text;
+          delete o.dataset.mark;
           break;
         }
       }
