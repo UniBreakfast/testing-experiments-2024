@@ -22,6 +22,9 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         createOptions() { },
         addOptions() { },
         getValue() { },
+        setMark() { },
+        getMark() { },
+        markOption() { },
       };
 
       for (const method in swmBeLike) {
@@ -342,6 +345,199 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         throw new ErrorWithArgs('swm.getValue() should return the value of the selected option', result, 'where should be', value);
       }
     },
+
+    getMark() {
+      const received = swm.getMark();
+      const expected = { prefix: '', postfix: '' };
+
+      if (!areCloneLike(received, expected)) {
+        throw new ErrorWithArgs('swm.getMark() without prefix and postfix set previously should return', expected, 'but instead got', received);
+      }
+    },
+
+    setMarkWithoutPrefixAndPostfix() {
+      try {
+        swm.setMark();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.setMark() without prefix and postfix should throw an error');
+        }
+
+        if (err.message != 'No prefix or postfix passed') {
+          throw new ErrorWithArgs('swm.setMark() without prefix and postfix should throw an error with the message "No prefix or postfix passed"', err);
+        }
+      }
+    },
+
+    setMarkWithPrefixAndPostfixSets() {
+      const mark = { prefix: '(', postfix: ')' };
+      const expected = { prefix: '(', postfix: ')' };
+
+      try {
+        swm.setMark(mark);
+
+        const received = swm.getMark();
+        
+        if (!areCloneLike(received, expected)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new ErrorWithArgs('swm.setMark() with prefix and postfix should set the mark to', expected, 'but instead got', swm.getMark());
+        }
+
+        throw new ErrorWithArgs('swm.setMark() with prefix and postfix should set the mark', err);
+      }
+    },
+
+    setMarkWithPrefixOrPostfixSets() {
+      const mark1 = { prefix: '(' };
+      const mark2 = { postfix: ')' };
+      const expected1 = { prefix: '(', postfix: '' };
+      const expected2 = { prefix: '(', postfix: ')' };
+      let received1, received2;
+
+      try {
+        swm.setMark(mark1);
+        
+        received1 = swm.getMark();
+
+        swm.setMark(mark2);
+
+        received2 = swm.getMark();
+
+        if (!areCloneLike(received1, expected1) || !areCloneLike(received2, expected2)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new ErrorWithArgs('swm.setMark() with prefix or postfix should set the mark to', expected1, 'and', expected2, 'but instead got', received1, 'and', received2);
+        }
+
+        throw new ErrorWithArgs('swm.setMark() with prefix or postfix should set the mark', err);
+      }
+    },
+
+    markOptionWithoutSelectThrows() {
+      try {
+        swm.markOption();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.markOption() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.markOption() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    markOptionWithoutOptionsThrows({select}) {
+      try {
+        swm.setSelect(select);
+        swm.markOption();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.markOption() should throw an error if select has no options');
+        }
+
+        if (err.message != 'Select has no options') {
+          throw new ErrorWithArgs('swm.markOption() should throw an error with the message "Select has no options"', err);
+        }
+      }
+    },
+
+    markOptionWithoutMarkDoesNoting({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+      const expected = vOptions(options);
+
+      swm.setSelect(select);
+      swm.addOptions(options);
+      swm.markOption();
+
+      const received = vOptions(select.children);
+
+      if (!areCloneLike(received, expected)) {
+        throw new ErrorWithArgs('swm.markOption() without mark should do nothing', received, 'where should be', expected);
+      }
+    },
+
+    markOptionWithMarkMarks({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+      const mark = { prefix: '✓ ' };
+      const expected = vOptions(options)
+
+      expected[0][1] = mark.prefix + expected[0][1];
+
+      swm.setSelect(select);
+      swm.addOptions(options);
+      swm.setMark(mark);
+      swm.markOption(options[0]);
+
+      const received = vOptions(select.children);
+
+      if (!areCloneLike(received, expected)) {
+        throw new ErrorWithArgs('swm.markOption() with mark should mark the options', received, 'where should be', expected);
+      }
+    },
+
+    markOptionWithoutOptionMarksFirstUnmarked({select}) {
+      const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
+      const mark = { prefix: '✓ ' };
+      const expected1 = vOptions(options);
+      const expected2 = vOptions(options);
+
+      expected1[0][1] = mark.prefix + expected1[0][1];
+      expected2[0][1] = mark.prefix + expected2[0][1];
+      expected2[1][1] = mark.prefix + expected2[1][1];
+
+      swm.setSelect(select);
+      swm.addOptions(options);
+      swm.setMark(mark);
+      swm.markOption();
+
+      const received1 = vOptions(select.children);
+
+      swm.markOption();
+
+      const received2 = vOptions(select.children);
+
+      if (!areCloneLike(received1, expected1) || !areCloneLike(received2, expected2)) {
+        throw new ErrorWithArgs('swm.markOption() without option should mark the first unmarked option', received1, 'where should be', expected1, 'and', received2, 'where should be', expected2);
+      }
+    },
+
+    markOptionWithWrongOptionThrows({select}) {
+      const wrongOption = document.createElement('div');
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions([new Option]);
+        swm.markOption(wrongOption);
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.markOption() should throw an error if a non-option is passed');
+        }
+
+        if (err.message != 'Correct option argument required (option element)') {
+          throw new ErrorWithArgs('swm.markOption() should throw an error with the message "Correct option argument required (option element)"', err);
+        }
+      }
+    },
   }  
   
   function setup() {
@@ -366,4 +562,7 @@ function vOptions(options) {
   createOptions (with items)
   addOptions (without select, with options, without options, with wrong options, with wrong directives, with before, with select directive, with hide directive)
   getValue (without select, with options)
+  setMark (without prefix and postfix, with one or both)
+  getMark (without prefix and postfix, with one or both)
+  markOption (without select, without options, without mark, with mark, without option, with option, with wrong option)
 */

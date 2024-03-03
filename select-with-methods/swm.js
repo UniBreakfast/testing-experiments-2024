@@ -1,5 +1,5 @@
 export { swm as selectWithMethods, swm as default, swm, reset }; // project://select-with-methods/select-with-methods.test.js
-let s;
+let s, prefix = '', postfix = '';
 
 const swm = {
   setSelect(select) {
@@ -28,12 +28,12 @@ const swm = {
 
     if (
       arguments.length > 1 && (
-        !directives || 
-        typeof directives != 'object' || 
-        Object.keys(directives).filter(key => dirKeys.includes(key)).length < 1 || 
-        dirKeys.some(key => (key in directives) && ![true, 1].includes(directives[key])) || 
+        !directives ||
+        typeof directives != 'object' ||
+        Object.keys(directives).filter(key => dirKeys.includes(key)).length < 1 ||
+        dirKeys.some(key => (key in directives) && ![true, 1].includes(directives[key])) ||
         before && after ||
-        (select || mark) && hide  
+        (select || mark) && hide
       )) {
       throw new Error('Incorrect directives argument is passed');
     }
@@ -53,8 +53,47 @@ const swm = {
 
     return s.value;
   },
+
+  setMark(mark = {}) {
+    if (!mark || !mark.hasOwnProperty('prefix') && !mark.hasOwnProperty('postfix')) {
+      throw new Error('No prefix or postfix passed');
+    }
+
+    if ('prefix' in mark) prefix = String(mark.prefix);
+    if ('postfix' in mark) postfix = String(mark.postfix);
+  },
+
+  getMark() {
+    return { prefix, postfix };
+  },
+
+  markOption(option) {
+    if (!s) throw new Error('No select set');
+
+    if (!s.options.length) throw new Error('Select has no options');
+
+    if (option) {
+      if (!(option instanceof HTMLOptionElement)) {
+        throw new Error('Correct option argument required (option element)');
+      }
+      
+      option.text = prefix + option.text + postfix;
+      option.dataset.mark = true;
+
+    } else {
+      for (const o of s.options) {
+        if (!o.dataset.mark) {
+          o.text = prefix + o.text + postfix;
+          o.dataset.mark = true;
+          break;
+        }
+      }
+    }
+  },
 };
 
 function reset() {
   s = undefined;
+  prefix = '';
+  postfix = '';
 }

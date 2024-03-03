@@ -1,29 +1,29 @@
-!createSelect()
+! createSelect()
 
   createSelect() - creates a select element and returns it
 
-!getSelect()
+! getSelect()
 
   getSelect() - returns the сurrent select element
   getSelect() with no current select element - returns null
 
 *setSelect(select)
 
-  setSelect() - throws an error
-  setSelect(select) - sets it as the current select element
-  setSelect(null) - forgets the current select element
-  setSelect(not a select element) - throws an error
+  * setSelect() - throws an error
+  * setSelect(select) - sets it as the current select element
+  * setSelect(null) - forgets the current select element
+  * setSelect(not a select element) - throws an error
 
-!hideSelect()
-!showSelect()
+! hideSelect()
+! showSelect()
 
   hideSelect() - hides the current select element
   showSelect() - shows the current select element
   hide/showSelect() with no current select element - throws an error
 
-!removeSelect()
-!placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
-!replaceSelect(?...elements)
+! removeSelect()
+! placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
+! replaceSelect(?...elements)
 
   remove/replaceSelect() - removes the current select element from the DOM
   placeSelect() - places the current select element at the end of the body
@@ -41,7 +41,7 @@
   replaceSelect(...elements) - replaces the current select element in the DOM with the elements
   remove/place/replaceSelect(...) with no current select element - throws an error
 
-?createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
+? createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
 
   createOptions()/(NaPI / NaO) - throws an error, NaPI - not a positive integer, NaO - not an object
   createOptions(PI) - creates and returns the specified number of options
@@ -72,7 +72,7 @@
   createOptions({select/mark: true, hide: true}) - throws an error
   createOptions({replace: true, add: true}) - throws an error
 
-!getOptions(?{ selected, marked, hidden, value, text, index, all, any})
+! getOptions(?{ selected, marked, hidden, value, text, index, all, any})
 
   getOptions()/({all: true}) - returns all the options
   getOptions({selected: true}) - returns an array with the selected option
@@ -96,20 +96,20 @@
   getOptions({any combination of selected, marked, hidden, value, text, index with any: true}) - returns the options satisfying any of the conditions
   getOptions({all: true, with any other condition}) - throws an error
 
-?addOptions(options, ?{ before, after, select, mark, hide })
+? addOptions(options, ?{ before, after, select, mark, hide })
 
-  addOptions() with no current select element - throws an error
-  addOptions()/({}) - throws an error
-  addOptions(options)/(options, {after: true}) - adds the options after the current ones
-  addOptions(options, {before: true}) - adds the options before the current ones
-  addOptions(options, {select: true}) - adds the options and selects first of them
+  * addOptions() with no current select element - throws an error
+  * addOptions()/({}) - throws an error
+  * addOptions(options)/(options, {after: true}) - adds the options after the current ones
+  * addOptions(options, {before: true}) - adds the options before the current ones
+  * addOptions(options, {select: true}) - adds the options and selects first of them
   addOptions(options, {mark: true}) - adds the options and marks them
-  addOptions(options, {hide: true}) - adds the options and hides them
-  addOptions(options, {before/after/select/mark/hide: !true}) - throws an error
-  addOptions({before: true, after: true}) - throws an error
-  addOptions({select/mark: true, hide: true}) - throws an error
+  * addOptions(options, {hide: true}) - adds the options and hides them
+  * addOptions(options, {before/after/select/mark/hide: !true}) - throws an error
+  * addOptions({before: true, after: true}) - throws an error
+  * addOptions({select/mark: true, hide: true}) - throws an error
 
-!removeOptions(?options, ?{ selected, marked, hidden, value, text, index, all, any })
+! removeOptions(?options, ?{ selected, marked, hidden, value, text, index, all, any })
 
   removeOptions() with no current select element - throws an error
   removeOptions()/({all: true}) - removes all the options
@@ -134,7 +134,7 @@
   removeOptions({all: true, with any other condition}) - throws an error
   removeOptions({any: false}) - throws an error
 
-!getValues(?options, ?{ selected, marked, hidden, text, index, all, any })
+! getValues(?options, ?{ selected, marked, hidden, text, index, all, any })
 
   getValues() with no current select element - throws an error
   getValues()/({all: true}) - returns all the values
@@ -156,7 +156,7 @@
   getValues({all: true, with any other condition}) - throws an error
   getValues({any: false}) - throws an error
 
-!getTexts(?options, ?{ selected, marked, hidden, value, index, all, any })
+! getTexts(?options, ?{ selected, marked, hidden, value, index, all, any })
 
   getTexts() with no current select element - throws an error
   getTexts()/({all: true}) - returns all the texts
@@ -178,7 +178,7 @@
   getTexts({all: true, with any other condition}) - throws an error
   getTexts({any: false}) - throws an error
 
-!getIndices(?options, ?{ selected, marked, hidden, value, text, all, any })
+! getIndices(?options, ?{ selected, marked, hidden, value, text, all, any })
 
   getIndices() with no current select element - throws an error
   getIndices()/({all: true}) - returns all the indices
@@ -199,7 +199,7 @@
   getIndices({all: true, with any other condition}) - throws an error
   getIndices({any: false}) - throws an error
 
-!markOptions(?options, ?{ selected, value, text, index, all, any })
+! markOptions(?options, ?{ selected, value, text, index, all, any })
 
   markOptions() with no current select element - throws an error
   markOptions()/({all: true}) - marks all the options
@@ -219,7 +219,7 @@
   markOptions({all: true, with any other condition}) - throws an error
   markOptions({any: false}) - throws an error
 
-!unmarkOptions(?options, ?{ selected, value, text, index, all, any })
+! unmarkOptions(?options, ?{ selected, value, text, index, all, any })
 
   unmarkOptions() with no current select element - throws an error
   unmarkOptions()/({all: true}) - unmarks all the options
@@ -239,7 +239,7 @@
   unmarkOptions({all: true, with any other condition}) - throws an error
   unmarkOptions({any: false}) - throws an error
 
-!hideOptions(?options, ?{ selected, marked, value, text, index, all, any })
+! hideOptions(?options, ?{ selected, marked, value, text, index, all, any })
 
   hideOptions() with no current select element - throws an error
   hideOptions()/({all: true}) - hides all the options
@@ -261,7 +261,7 @@
   hideOptions({all: true, with any other condition}) - throws an error
   hideOptions({any: false}) - throws an error
 
-!showOptions(?options, ?{ value, text, index, all, any })
+! showOptions(?options, ?{ value, text, index, all, any })
 
   showOptions() with no current select element - throws an error
   showOptions()/({all: true}) - shows all the options
@@ -279,7 +279,7 @@
   showOptions({all: true, with any other condition}) - throws an error
   showOptions({any: false}) - throws an error
 
-!getOption(?{ selected, marked, hidden, value, text, index, any})
+! getOption(?{ selected, marked, hidden, value, text, index, any})
 
   getOption() with no current select element - throws an error
   getOption()/(selected: true) - returns the selected option or null
@@ -300,7 +300,7 @@
   getOption({any combination of selected, marked, hidden, value, text, index with any: true}) - returns the option satisfying any of the conditions, or null
   getOption({any: false}) - throws an error
 
-!selectOption(?option, ?{ value, text, index, marked, any })
+! selectOption(?option, ?{ value, text, index, marked, any })
 
   selectOption() with no current select element - throws an error
   selectOption() - makes sure at least one visible option is selected if there are any and no option is selected
@@ -318,7 +318,7 @@
   selectOption({any combination of value, text, index, marked with any: true}) - selects the option satisfying any of the conditions if it is visible
   selectOption({any: false}) - throws an error
 
-!addOption(option, ?{ before, after, select, mark, hide })
+! addOption(option, ?{ before, after, select, mark, hide })
 
   addOption() with no current select element - throws an error
   addOption(option)/(option, {after: true}) - adds the option after the current ones
@@ -330,7 +330,7 @@
   addOption(option, {before: true, after: true}) - throws an error
   addOption(option, {select/mark: true, hide: true}) - throws an error
 
-!removeOption(?option, ?{ selected, marked, hidden, value, text, index, any})
+! removeOption(?option, ?{ selected, marked, hidden, value, text, index, any})
 
   removeOption() with no current select element - throws an error
   removeOption() - removes the first visible option or the first invisible one if there are no visible options, if there are any
@@ -353,7 +353,7 @@
   removeOption({any combination of selected, marked, hidden, value, text, index with any: true}) - removes the option satisfying any of the conditions or throws an error if there is no such option
   removeOption({any: false}) - throws an error
 
-?getValue(?option, ?{ selected, marked, hidden, text, index, any })
+? getValue(?option, ?{ selected, marked, hidden, text, index, any })
 
   getValue() with no current select element - throws an error
   getValue()/({selected: true}) - returns the value of the selected option or null if there is no selected option
@@ -372,7 +372,7 @@
   getValue({any combination of selected, marked, hidden, text, index with any: true}) - returns the value of the first option satisfying any of the conditions or null if there is no such option
   getValue({any: false}) - throws an error
 
-!getText(?option, ?{ selected, marked, hidden, value, index, any })
+! getText(?option, ?{ selected, marked, hidden, value, index, any })
 
   getText() with no current select element - throws an error
   getText() - returns the text of the first option or null if there are none
@@ -392,7 +392,7 @@
   getText({any combination of selected, marked, hidden, value, index with any: true}) - returns the text of the first option satisfying any of the conditions or null if there is no such option
   getText({any: false}) - throws an error
 
-!getIndex(?option, ?{ selected, marked, hidden, value, text, any })
+! getIndex(?option, ?{ selected, marked, hidden, value, text, any })
 
   getIndex() with no current select element - throws an error
   getIndex() - returns 0 if there is an option or -1 if there are none
@@ -411,7 +411,7 @@
   getIndex({any combination of selected, marked, hidden, value, text with any: true}) - returns the index of the first option satisfying any of the conditions or -1 if there is no such option
   getIndex({any: false}) - throws an error
 
-!markOption(?option, ?{ selected, value, text, index, any })
+! markOption(?option, ?{ selected, value, text, index, any })
 
   markOption() with no current select element - throws an error
   markOption() - marks the first unmarked option if there is one
@@ -430,7 +430,7 @@
   markOption({any combination of selected, value, text, index with any: true}) - marks the unmarked option satisfying any of the conditions or throws an error if there is no such option
   markOption({any: false}) - throws an error
 
-!unmarkOption(?option, ?{ selected, value, text, index, any })
+! unmarkOption(?option, ?{ selected, value, text, index, any })
 
   unmarkOption() with no current select element - throws an error
   unmarkOption() - unmarks the first marked option if there is one
@@ -449,7 +449,7 @@
   unmarkOption({any combination of selected, value, text, index with any: true}) - unmarks the first marked option satisfying any of the conditions or throws an error if there is no such option
   unmarkOption({any: false}) - throws an error
 
-!hideOption(?option, ?{ selected, marked, value, text, index, any })
+! hideOption(?option, ?{ selected, marked, value, text, index, any })
 
   hideOption() with no current select element - throws an error
   hideOption() - hides the first visible option if there is one
@@ -467,7 +467,7 @@
   hideOption({index: PF}) - hides the first visible option satisfying the predicate function with an option index as an argument or throws an error if there is no such option
   hideOption({index: NaNNI}) - throws an error
 
-!showOption(?option, ?{ value, text, index, any })
+! showOption(?option, ?{ value, text, index, any })
 
   showOption() with no current select element - throws an error
   showOption() - shows the first hidden option if there is one
@@ -484,13 +484,13 @@
   showOption({any combination of value, text, index with any: true}) - shows the first hidden option satisfying any of the conditions or throws an error if there is no such option
   showOption({any: false}) - throws an error
 
-!setMark({ prefix, postfix })
+* setMark({ prefix, postfix })
 
-  setMark({prefix: string}) - sets the prefix for the marked options, postfix is empty by default, updates the marked options
-  setMark({postfix: string}) - sets the postfix for the marked options, prefix is empty by default, updates the marked options
-  setMark({prefix: string, postfix: string}) - sets the prefix and postfix for the marked options, updates the marked options
-  setMark()/({without prefix and postfix}) - throws an error
+  * setMark({prefix: string}) - sets the prefix for the marked options, postfix is empty by default, updates the marked options
+  * setMark({postfix: string}) - sets the postfix for the marked options, prefix is empty by default, updates the marked options
+  * setMark({prefix: string, postfix: string}) - sets the prefix and postfix for the marked options, updates the marked options
+  * setMark()/({without prefix and postfix}) - throws an error
 
-!getMark()
+* getMark()
 
-  getMark() - returns the prefix and postfix for the marked options as an object
+  * getMark() - returns the prefix and postfix for the marked options as an object
