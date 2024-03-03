@@ -2,10 +2,30 @@ export { swm as selectWithMethods, swm as default, swm, reset }; // project://se
 let s, prefix = '', postfix = '';
 
 const swm = {
+  createSelect() {
+    return document.createElement('select');
+  },
+
+  getSelect() {
+    return s || null;
+  },
+  
   setSelect(select) {
     if (!(select instanceof HTMLSelectElement) && select !== null) throw new Error('No select passed');
 
     s = select;
+  },
+
+  hideSelect() {
+    if (!s) throw new Error('No select set');
+
+    s.hidden = true;
+  },
+
+  showSelect() {
+    if (!s) throw new Error('No select set');
+
+    s.hidden = false;
   },
 
   createOptions({ items }) {
@@ -42,6 +62,14 @@ const swm = {
     else s.append(...options);
 
     if (select) s.value = options[0].value;
+
+    if (mark) {
+      for (const o of options) {
+        o.dataset.text = o.text;
+        o.dataset.mark = true;
+        o.text = prefix + o.text + postfix;
+      }
+    }
 
     if (hide) {
       for (const o of options) o.hidden = true;

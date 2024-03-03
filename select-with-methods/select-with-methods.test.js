@@ -18,7 +18,11 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
 
     swmHasMethods() {
       const swmBeLike = {
+        createSelect() { },
+        getSelect() { },
         setSelect() { },
+        hideSelect() { },
+        showSelect() { },
         createOptions() { },
         addOptions() { },
         getValue() { },
@@ -57,11 +61,38 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
+    createSelectReturnsNewSelect() {
+      const select = swm.createSelect();
+
+      if (!(select instanceof HTMLSelectElement)) {
+        throw new ErrorWithArgs('swm.createSelect() should return a new select element', select);
+      }
+    },
+
+    getSelectWithoutSelectReturnsNull() {
+      const select = swm.getSelect();
+
+      if (select !== null) {
+        throw new ErrorWithArgs('swm.getSelect() without select should return null', select);
+      }
+    },
+
+    getSelectWithSelectReturnsSelect({select}) {
+      swm.setSelect(select);
+
+      const received = swm.getSelect();
+
+      if (received !== select) {
+        throw new ErrorWithArgs('swm.getSelect() with select should return the select', received, 'where should be', select);
+      }
+    },
+
     setSelectWithoutArgumentsThrows() {
       try {
         swm.setSelect();
 
         throw null;
+
       } catch (err) {
         if (!err) {
           throw new Error('swm.setSelect() should throw an error if no select is passed');
@@ -75,6 +106,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
     setSelectWithSelectDoesNotThrow({select}) {
       try {
         swm.setSelect(select);
+
       } catch (err) {
         throw new ErrorWithArgs('swm.setSelect() should not throw an error if a select is passed', err);
       }
@@ -88,6 +120,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       try {
         swm.setSelect(select);
         swm.addOptions(options);
+
       } catch (err) {
         if (err.message == 'No select set') {
           throw new Error('swm.setSelect() should set the select');
@@ -102,6 +135,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         swm.getValue();
 
         throw null;
+
       } catch (err) {
         if (!err) {
           throw new Error('swm.setSelect() should unset the select');
@@ -120,6 +154,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         swm.setSelect(notSelect);
 
         throw null;
+
       } catch (err) {
         if (!err) {
           throw new Error('swm.setSelect() should throw an error if a non-select is passed');
@@ -128,6 +163,59 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         if (err.message != 'No select passed') {
           throw new ErrorWithArgs('swm.setSelect() should throw an error with the message "No select passed"', err);
         }
+      }
+    },
+
+    hideSelectWithoutSelectThrows() {
+      try {
+        swm.hideSelect();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.hideSelect() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.hideSelect() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    showSelectWithoutSelectThrows() {
+      try {
+        swm.showSelect();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.showSelect() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.showSelect() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    hideSelectHides({select}) {
+      swm.setSelect(select);
+      swm.hideSelect();
+
+      if (!select.hidden) {
+        throw new Error('swm.hideSelect() should hide the select');
+      }
+    },
+
+    showSelectShows({select}) {
+      select.hidden = true;
+      swm.setSelect(select);
+      swm.showSelect();
+
+      if (select.hidden) {
+        throw new Error('swm.showSelect() should show the select');
       }
     },
 
@@ -295,6 +383,34 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         }
 
         throw new ErrorWithArgs('swm.addOptions() should select the first option if the select directive is passed', err);
+      }
+    },
+
+    addOptionsWithMarkDirective({select}) {
+      const oldOptions = [new Option('Alpha', 'a'), new Option('Bravo', 'b'), new Option('Charlie', 'c')];
+      const newOptions = [new Option('Delta', 'd'), new Option('Echo', 'e')];
+      const mark = { prefix: '✓ ' };
+      const expected = vOptions(newOptions);
+
+      expected[0][1] = mark.prefix + expected[0][1];
+      expected[1][1] = mark.prefix + expected[1][1];
+
+      try {
+        swm.setSelect(select);
+        swm.addOptions(oldOptions);
+        swm.setMark(mark);
+        swm.addOptions(newOptions, { mark: true });
+
+        const received = vOptions(newOptions);
+
+        if (!areCloneLike(received, expected)) throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new ErrorWithArgs('swm.addOptions() should mark the options if the mark directive is passed', vOptions(newOptions), 'where should be', expected);
+        }
+
+        throw new ErrorWithArgs('swm.addOptions() should mark the options if the mark directive is passed', err);
       }
     },
 
@@ -667,9 +783,13 @@ function vOptions(options) {
 }
 
 /*
+  createSelect
+  getSelect (without select, with select)
   setSelect (without arguments, with select, with null, with wrong argument)
+  hideSelect (without select, with select)
+  showSelect (without select, with select)
   createOptions (with items)
-  addOptions (without select, with options, without options, with wrong options, with wrong directives, with before, with select directive, with hide directive)
+  addOptions (without select, with options, without options, with wrong options, with wrong directives, with before, with select directive, with mark directive, with hide directive)
   getValue (without select, with options)
   setMark (without prefix and postfix, with one or both)
   getMark (without prefix and postfix, with one or both)

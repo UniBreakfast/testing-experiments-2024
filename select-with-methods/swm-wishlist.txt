@@ -1,11 +1,11 @@
-! createSelect()
+* createSelect()
 
-  createSelect() - creates a select element and returns it
+  * createSelect() - creates a select element and returns it
 
-! getSelect()
+* getSelect()
 
-  getSelect() - returns the сurrent select element
-  getSelect() with no current select element - returns null
+  * getSelect() - returns the сurrent select element
+  * getSelect() with no current select element - returns null
 
 *setSelect(select)
 
@@ -14,12 +14,12 @@
   * setSelect(null) - forgets the current select element
   * setSelect(not a select element) - throws an error
 
-! hideSelect()
-! showSelect()
+* hideSelect()
+* showSelect()
 
-  hideSelect() - hides the current select element
-  showSelect() - shows the current select element
-  hide/showSelect() with no current select element - throws an error
+  * hideSelect() - hides the current select element
+  * showSelect() - shows the current select element
+  * hide/showSelect() with no current select element - throws an error
 
 ! removeSelect()
 ! placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
@@ -96,14 +96,14 @@
   getOptions({any combination of selected, marked, hidden, value, text, index with any: true}) - returns the options satisfying any of the conditions
   getOptions({all: true, with any other condition}) - throws an error
 
-? addOptions(options, ?{ before, after, select, mark, hide })
+* addOptions(options, ?{ before, after, select, mark, hide })
 
   * addOptions() with no current select element - throws an error
   * addOptions()/({}) - throws an error
   * addOptions(options)/(options, {after: true}) - adds the options after the current ones
   * addOptions(options, {before: true}) - adds the options before the current ones
   * addOptions(options, {select: true}) - adds the options and selects first of them
-  addOptions(options, {mark: true}) - adds the options and marks them
+  * addOptions(options, {mark: true}) - adds the options and marks them
   * addOptions(options, {hide: true}) - adds the options and hides them
   * addOptions(options, {before/after/select/mark/hide: !true}) - throws an error
   * addOptions({before: true, after: true}) - throws an error
