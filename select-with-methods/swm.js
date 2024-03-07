@@ -9,6 +9,34 @@ const swm = {
   getSelect() {
     return s || null;
   },
+
+  removeSelect() {
+    if (!s) throw new Error('No select set');
+
+    s.remove();
+  },
+
+  replaceSelect(...nodes) {
+    if (!s) throw new Error('No select set');
+
+    s.replaceWith(...nodes);
+  },
+
+  placeSelect(elemOrSelector) {
+    if (!s) throw new Error('No select set');
+
+    if (!arguments.length) return document.body.append(s);
+    
+    const elem = elemOrSelector instanceof HTMLElement ? elemOrSelector : document.querySelector(elemOrSelector);
+    
+    if (!elem) throw new Error('No element found');
+
+    try {
+      elem.append(s);
+    } catch (err) {
+      throw new Error('Element is not a container');
+    }
+  },
   
   setSelect(select) {
     if (!(select instanceof HTMLSelectElement) && select !== null) throw new Error('No select passed');
@@ -153,6 +181,7 @@ const swm = {
 };
 
 function reset() {
+  s?.remove?.();
   s = undefined;
   prefix = '';
   postfix = '';

@@ -21,14 +21,16 @@
   * showSelect() - shows the current select element
   * hide/showSelect() with no current select element - throws an error
 
-! removeSelect()
-! placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
-! replaceSelect(?...elements)
+* removeSelect()
+? placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
+? replaceSelect(?...elements)
 
-  remove/replaceSelect() - removes the current select element from the DOM
-  placeSelect() - places the current select element at the end of the body
-  placeSelect(element) - places the current select element at the end of the element
-  placeSelect(selector) - places the current select element at the end of the element found by the selector
+  * remove/replaceSelect() - removes the current select element from the DOM
+  * remove/place/replaceSelect(...) with no current select element - throws an error
+  * replaceSelect(...elements) - replaces the current select element in the DOM with the elements
+  * placeSelect() - places the current select element at the end of the body
+  * placeSelect(element) - places the current select element at the end of the element
+  * placeSelect(selector) - places the current select element at the end of the element found by the selector
   placeSelect(selector, ...) with no element found - throws an error
   placeSelect(element, selector) - throws an error
   placeSelect(element/selector, {directive: !true}) - throws an error
@@ -38,8 +40,6 @@
   placeSelect(element/selector, {prepend: true}) - prepends the current select element to the element
   placeSelect(element/selector, {replace: true}) - replaces the element with the current select element
   placeSelect(element/selector, {replace: true, inside: true}) - replaces the element's content with the current select element
-  replaceSelect(...elements) - replaces the current select element in the DOM with the elements
-  remove/place/replaceSelect(...) with no current select element - throws an error
 
 ? createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
 

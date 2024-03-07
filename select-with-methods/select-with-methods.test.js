@@ -19,6 +19,9 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
     swmHasMethods() {
       const swmBeLike = {
         createSelect() { },
+        removeSelect() { },
+        replaceSelect() { },
+        placeSelect() { },
         getSelect() { },
         setSelect() { },
         hideSelect() { },
@@ -763,6 +766,161 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         }
       }
     },
+
+    removeSelectWithoutSelectThrows() {
+      try {
+        swm.removeSelect();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.removeSelect() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.removeSelect() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    removeSelectWithSelectRemoves({select}) {
+      document.body.append(select);
+      
+      swm.setSelect(select);
+      swm.removeSelect();
+
+      if (select.parentElement) {
+        throw new Error('swm.removeSelect() should remove the select');
+      }
+    },
+
+    replaceSelectWithoutSelectThrows() {
+      try {
+        swm.replaceSelect();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.replaceSelect() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.replaceSelect() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    replaceSelectWithoutArgsRemoves({select}) {
+      document.body.append(select);
+      
+      swm.setSelect(select);
+      swm.replaceSelect();
+
+      if (select.parentElement) {
+        throw new Error('swm.replaceSelect() should remove the select');
+      }
+    },
+
+    replaceSelectWithNodesReplaces({select}) {
+      const body = document.body;
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      body.append(select);
+      
+      try {
+        swm.setSelect(select);
+        swm.replaceSelect(div, span);
+
+        if (select.parentElement || body != div.parentElement || body != span.parentElement || div.nextElementSibling != span) {
+          throw null;
+        }
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.replaceSelect() should replace the select with the passed nodes');
+        }
+
+        throw new ErrorWithArgs('swm.replaceSelect() should replace the select with the nodes', err);
+        
+      } finally {
+        div.remove();
+        span.remove();
+      }
+    },
+
+    placeSelectWithoutSelectThrows() {
+      try {
+        swm.placeSelect();
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() should throw an error if no select is set');
+        }
+
+        if (err.message != 'No select set') {
+          throw new ErrorWithArgs('swm.placeSelect() should throw an error with the message "No select set"', err);
+        }
+      }
+    },
+
+    placeSelectWithoutArgsPlacesInBody({select}) {
+      swm.setSelect(select);
+      swm.placeSelect();
+
+      if (select.parentElement != document.body) {
+        throw new Error('swm.placeSelect() without arguments should place the select in the body');
+      }
+    },
+
+    placeSelectWithElementPlacesInElement({select}) {
+      const div = document.createElement('div');
+
+      swm.setSelect(select);
+      swm.placeSelect(div);
+
+      if (select.parentElement != div) {
+        throw new Error('swm.placeSelect() with element should place the select in the element');
+      }
+    },
+
+    placeSelectWithSelectorPlacesInElement({select}) {
+      const div1 = document.createElement('div');
+      const div2 = document.createElement('div');
+      const div3 = document.createElement('div');
+
+      div2.className = 'container';
+      div3.className = 'container';
+
+      try {
+        document.body.append(div1, div2, div3);
+  
+        swm.setSelect(select);
+        swm.placeSelect('.container');
+  
+        if (select.parentElement != div2) throw null;
+  
+        div1.remove();
+        div2.remove();
+        div3.remove();
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with selector should place the select in the first matching element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with selector should place the select in the first matching element', err);
+
+      } finally {
+        div1.remove();
+        div2.remove();
+        div3.remove();
+      }
+    },
+
   }  
   
   function setup() {
@@ -784,6 +942,9 @@ function vOptions(options) {
 
 /*
   createSelect
+  placeSelect (without select, without arguments, with element, with selector)
+  removeSelect (without select, with select)
+  replaceSelect (without select, without arguments, with nodes)
   getSelect (without select, with select)
   setSelect (without arguments, with select, with null, with wrong argument)
   hideSelect (without select, with select)
