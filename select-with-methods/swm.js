@@ -22,20 +22,45 @@ const swm = {
     s.replaceWith(...nodes);
   },
 
-  placeSelect(elemOrSelector) {
+  placeSelect(elemOrSelector, directives) {
     if (!s) throw new Error('No select set');
 
     if (!arguments.length) return document.body.append(s);
+
+    const args = Array.from(arguments);
+    
+    if (args.some(arg => typeof arg == 'string') && args.some(arg => arg instanceof HTMLElement)) {
+      throw new Error('Element or selector expected, not both!');
+    }
     
     const elem = elemOrSelector instanceof HTMLElement ? elemOrSelector : document.querySelector(elemOrSelector);
     
     if (!elem) throw new Error('No element found');
 
-    try {
-      elem.append(s);
-    } catch (err) {
-      throw new Error('Element is not a container');
+    const dirKeys = ['before', 'after', 'prepend', 'append', 'replace', 'inside'];
+
+    const { before, after, prepend, append, replace, inside } = directives || {};
+
+    if (
+      arguments.length > 1 && (
+        !directives ||
+        typeof directives != 'object' ||
+        Object.keys(directives).filter(key => dirKeys.includes(key)).length < 1 ||
+        dirKeys.some(key => (key in directives) && ![true, 1].includes(directives[key])) ||
+        before && after ||
+        prepend && append ||
+        (before || after) && inside
+      )) {
+      throw new Error('Incorrect directives argument is passed');
     }
+
+    if (before) elem.before(s);
+    else if (after) elem.after(s);
+    else if (prepend) elem.prepend(s);
+    else if (append || inside && !replace) elem.append(s);
+    else if (inside && replace) elem.replaceChildren(s);
+    else if (replace) elem.replaceWith(s);
+    else elem.append(s);
   },
   
   setSelect(select) {

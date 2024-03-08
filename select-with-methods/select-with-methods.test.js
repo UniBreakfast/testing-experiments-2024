@@ -80,7 +80,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    getSelectWithSelectReturnsSelect({select}) {
+    getSelectWithSelectReturnsSelect({ select }) {
       swm.setSelect(select);
 
       const received = swm.getSelect();
@@ -106,7 +106,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    setSelectWithSelectDoesNotThrow({select}) {
+    setSelectWithSelectDoesNotThrow({ select }) {
       try {
         swm.setSelect(select);
 
@@ -115,7 +115,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    setSelectSetsSelect({select}) {
+    setSelectSetsSelect({ select }) {
       reset();
 
       const options = [new Option(), new Option()]
@@ -131,7 +131,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    setSelectWithNullUnsets({select}) {
+    setSelectWithNullUnsets({ select }) {
       try {
         swm.setSelect(select);
         swm.setSelect(null);
@@ -149,7 +149,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         }
       }
     },
-      
+
     setSelectWithWrongArgumentThrows() {
       const notSelect = document.createElement('div');
 
@@ -203,7 +203,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    hideSelectHides({select}) {
+    hideSelectHides({ select }) {
       swm.setSelect(select);
       swm.hideSelect();
 
@@ -212,7 +212,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    showSelectShows({select}) {
+    showSelectShows({ select }) {
       select.hidden = true;
       swm.setSelect(select);
       swm.showSelect();
@@ -265,7 +265,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsAppends({select}) {
+    addOptionsAppends({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
 
       try {
@@ -281,7 +281,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithoutArgumentsThrows({select}) {
+    addOptionsWithoutArgumentsThrows({ select }) {
       try {
         swm.setSelect(select);
         swm.addOptions();
@@ -297,7 +297,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithWrongArgumentThrows({select}) {
+    addOptionsWithWrongArgumentThrows({ select }) {
       const wrongOptionsArgument = [new Option, document.createElement('div')];
 
       try {
@@ -316,26 +316,26 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithWrongSecondArgThrows({select}) {
+    addOptionsWithWrongSecondArgThrows({ select }) {
       const options = [new Option];
       const wrongArg1 = {};
       const wrongArg2 = '{}';
-      const wrongArg3 = {before: false};
-      const wrongArg4 = {before: true, after: true};
-      const wrongArg5 = {select: true, hide: true};
+      const wrongArg3 = { before: false };
+      const wrongArg4 = { before: true, after: true };
+      const wrongArg5 = { select: true, hide: true };
 
       [wrongArg1, wrongArg2, wrongArg3, wrongArg4, wrongArg5].forEach(wrongArg => {
         try {
           swm.setSelect(select);
           swm.addOptions(options, wrongArg);
-  
+
           throw null;
 
         } catch (err) {
           if (!err) {
             throw new ErrorWithArgs('swm.addOptions() should throw an error if incorrect directives argument is passed', wrongArg);
           }
-  
+
           if (err.message != 'Incorrect directives argument is passed') {
             throw new ErrorWithArgs('swm.addOptions() should throw an error with the message "Incorrect directives argument is passed"', wrongArg, err);
           }
@@ -343,7 +343,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       });
     },
 
-    addOptionsBefore({select}) {
+    addOptionsBefore({ select }) {
       const oldOptions = [new Option('Alpha', 'a'), new Option('Bravo', 'b'), new Option('Charlie', 'c')];
       const newOptions = [new Option('Delta', 'd'), new Option('Echo', 'e')];
       const expected = newOptions.concat(oldOptions);
@@ -356,7 +356,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
 
         const children = vOptions(select.children);
         const correct = areCloneLike(children, expectedChildren);
-        
+
         if (!correct) throw null;
 
       } catch (err) {
@@ -368,7 +368,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithSelectDirective({select}) {
+    addOptionsWithSelectDirective({ select }) {
       const oldOptions = [new Option('Alpha', 'a'), new Option('Bravo', 'b'), new Option('Charlie', 'c')];
       const newOptions = [new Option('Delta', 'd'), new Option('Echo', 'e')];
       const expected = 'd';
@@ -389,7 +389,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithMarkDirective({select}) {
+    addOptionsWithMarkDirective({ select }) {
       const oldOptions = [new Option('Alpha', 'a'), new Option('Bravo', 'b'), new Option('Charlie', 'c')];
       const newOptions = [new Option('Delta', 'd'), new Option('Echo', 'e')];
       const mark = { prefix: '✓ ' };
@@ -417,7 +417,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    addOptionsWithHideDirective({select}) {
+    addOptionsWithHideDirective({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
 
       try {
@@ -452,7 +452,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    getValueReturnsValue({select}) {
+    getValueReturnsValue({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const value = options[0].value;
 
@@ -500,7 +500,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         swm.setMark(mark);
 
         const received = swm.getMark();
-        
+
         if (!areCloneLike(received, expected)) {
           throw null;
         }
@@ -523,7 +523,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
 
       try {
         swm.setMark(mark1);
-        
+
         received1 = swm.getMark();
 
         swm.setMark(mark2);
@@ -560,7 +560,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    markOptionWithoutOptionsThrows({select}) {
+    markOptionWithoutOptionsThrows({ select }) {
       try {
         swm.setSelect(select);
         swm.markOption();
@@ -578,7 +578,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    markOptionWithoutMarkDoesNoting({select}) {
+    markOptionWithoutMarkDoesNoting({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const expected = vOptions(options);
 
@@ -593,7 +593,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    markOptionWithMarkMarks({select}) {
+    markOptionWithMarkMarks({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const mark = { prefix: '✓ ' };
       const expected = vOptions(options)
@@ -612,7 +612,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    markOptionWithoutOptionMarksFirstUnmarked({select}) {
+    markOptionWithoutOptionMarksFirstUnmarked({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const mark = { prefix: '✓ ' };
       const expected1 = vOptions(options);
@@ -638,7 +638,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    markOptionWithWrongOptionThrows({select}) {
+    markOptionWithWrongOptionThrows({ select }) {
       const wrongOption = document.createElement('div');
 
       try {
@@ -676,7 +676,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    unmarkOptionWithoutOptionsThrows({select}) {
+    unmarkOptionWithoutOptionsThrows({ select }) {
       try {
         swm.setSelect(select);
         swm.unmarkOption();
@@ -694,7 +694,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    unmarkOptionWithoutOptionUnmarksFirstMarked({select}) {
+    unmarkOptionWithoutOptionUnmarksFirstMarked({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const mark = { prefix: '✓ ' };
       const expected1 = vOptions(options);
@@ -708,7 +708,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       options[1].text = mark.prefix + options[1].text;
 
       expected1[1][1] = mark.prefix + expected1[1][1];
-      
+
       swm.setSelect(select);
       swm.addOptions(options);
       swm.setMark(mark);
@@ -725,7 +725,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    unmarkOptionWithOptionUnmarks({select}) {
+    unmarkOptionWithOptionUnmarks({ select }) {
       const options = [new Option('Alpha', 'a'), new Option('Bravo', 'b')];
       const mark = { prefix: '✓ ' };
       const expected = vOptions(options);
@@ -746,7 +746,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    unmarkOptionWithWrongOptionThrows({select}) {
+    unmarkOptionWithWrongOptionThrows({ select }) {
       const wrongOption = document.createElement('div');
 
       try {
@@ -784,9 +784,9 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    removeSelectWithSelectRemoves({select}) {
+    removeSelectWithSelectRemoves({ select }) {
       document.body.append(select);
-      
+
       swm.setSelect(select);
       swm.removeSelect();
 
@@ -812,9 +812,9 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    replaceSelectWithoutArgsRemoves({select}) {
+    replaceSelectWithoutArgsRemoves({ select }) {
       document.body.append(select);
-      
+
       swm.setSelect(select);
       swm.replaceSelect();
 
@@ -823,13 +823,13 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    replaceSelectWithNodesReplaces({select}) {
+    replaceSelectWithNodesReplaces({ select }) {
       const body = document.body;
       const div = document.createElement('div');
       const span = document.createElement('span');
 
       body.append(select);
-      
+
       try {
         swm.setSelect(select);
         swm.replaceSelect(div, span);
@@ -843,7 +843,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
         }
 
         throw new ErrorWithArgs('swm.replaceSelect() should replace the select with the nodes', err);
-        
+
       } finally {
         div.remove();
         span.remove();
@@ -867,7 +867,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    placeSelectWithoutArgsPlacesInBody({select}) {
+    placeSelectWithoutArgsPlacesInBody({ select }) {
       swm.setSelect(select);
       swm.placeSelect();
 
@@ -876,7 +876,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    placeSelectWithElementPlacesInElement({select}) {
+    placeSelectWithElementPlacesInElement({ select }) {
       const div = document.createElement('div');
 
       swm.setSelect(select);
@@ -887,7 +887,7 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-    placeSelectWithSelectorPlacesInElement({select}) {
+    placeSelectWithSelectorPlacesInElement({ select }) {
       const div1 = document.createElement('div');
       const div2 = document.createElement('div');
       const div3 = document.createElement('div');
@@ -897,12 +897,12 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
 
       try {
         document.body.append(div1, div2, div3);
-  
+
         swm.setSelect(select);
         swm.placeSelect('.container');
-  
+
         if (select.parentElement != div2) throw null;
-  
+
         div1.remove();
         div2.remove();
         div3.remove();
@@ -921,11 +921,258 @@ import('./swm.js').then(({ selectWithMethods: swm, reset }) => {
       }
     },
 
-  }  
-  
+    placeSelectWithBadSelectorThrows({ select }) {
+      try {
+        swm.setSelect(select);
+        swm.placeSelect('.reniatnoc');
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with bad selector should throw an error');
+        }
+
+        if (err.message != 'No element found') {
+          throw new ErrorWithArgs('swm.placeSelect() with bad selector should throw an error with the message "No element found"', err);
+        }
+      }
+    },
+
+    placeSelectWithElementAndSelectorBothThrows({ select }) {
+      const div = document.createElement('div');
+
+      try {
+        swm.setSelect(select);
+        swm.placeSelect(div, '.container');
+
+        throw null;
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with element and selector both should throw an error');
+        }
+
+        if (err.message != 'Element or selector expected, not both!') {
+          throw new ErrorWithArgs('swm.placeSelect() with element and selector both should throw an error with the message "Element or selector expected, not both!"', err);
+        }
+      }
+    },
+
+    placeSelectWithIncorrectDirectivesThrows({ select }) {
+      const div = document.createElement('div');
+      const wrongArg1 = {};
+      const wrongArg2 = { before: false };
+      const wrongArg3 = { before: false };
+      const wrongArg4 = { before: false };
+      const wrongArg5 = { before: false };
+      const wrongArg6 = { before: false };
+      const wrongArg7 = { before: false };
+      const wrongArg8 = { before: true, after: true };
+      const wrongArg9 = { append: true, prepend: true };
+      const wrongArg10 = { before: true, inside: true };
+      const wrongArg11 = { after: true, inside: true };
+
+      [wrongArg1, wrongArg2, wrongArg3, wrongArg4, wrongArg5, wrongArg6, wrongArg7, wrongArg8, wrongArg9, wrongArg10, wrongArg11].forEach(wrongArg => {
+        try {
+          swm.setSelect(select);
+          swm.placeSelect(div, wrongArg);
+
+          throw null;
+
+        } catch (err) {
+          if (!err) {
+            throw new ErrorWithArgs('swm.placeSelect() with incorrect directives should throw an error', wrongArg);
+          }
+
+          if (err.message != 'Incorrect directives argument is passed') {
+            throw new ErrorWithArgs('swm.placeSelect() with incorrect directives should throw an error with the message "Incorrect directives argument is passed"', wrongArg, err);
+          }
+        }
+      });
+    },
+
+    placeSelectBefore({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.append(div, span);
+        swm.setSelect(select);
+        swm.placeSelect(span, { before: true });
+
+        if (!(select.previousElementSibling == div && select.nextElementSibling == span && select.parentElement == document.body)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {before} should place the select before the element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {before} should place the select before the element', err);
+
+      } finally {
+        div.remove();
+        span.remove();
+      }
+    },
+
+    placeSelectAfter({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.append(div, span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { after: true });
+
+        if (!(select.previousElementSibling == div && select.nextElementSibling == span && select.parentElement == document.body)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {after} should place the select after the element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {after} should place the select after the element', err);
+
+      } finally {
+        div.remove();
+        span.remove();
+      }
+    },
+
+    placeSelectAppend({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.appendChild(div).append(span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { append: true });
+
+        if (!(select.parentElement == div && select.previousElementSibling == span)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {append} should append the select to the element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {append} should append the select to the element', err);
+
+      } finally {
+        div.remove();
+      }
+    },
+
+    placeSelectPrepend({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.appendChild(div).append(span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { prepend: true });
+
+        if (!(select.parentElement == div && select.nextElementSibling == span)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {prepend} should prepend the select to the element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {prepend} should prepend the select to the element', err);
+
+      } finally {
+        div.remove();
+      }
+    },
+
+    placeSelectInside({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.appendChild(div).append(span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { inside: true });
+
+        if (!(select.parentElement == div && select.previousElementSibling == span)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {inside} should append the select inside the element');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {inside} should append the select inside the element', err);
+
+      } finally {
+        div.remove();
+      }
+    },
+
+    placeSelectReplace({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.appendChild(div).append(span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { replace: true });
+
+        if (!(select.parentElement == document.body && !div.parentElement)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {replace} should replace the element with the select');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {replace} should replace the element with the select', err);
+
+      } finally {
+        div.remove();
+      }
+    },
+
+    placeSelectInsideAndReplace({ select }) {
+      const div = document.createElement('div');
+      const span = document.createElement('span');
+
+      try {
+        document.body.appendChild(div).append(span);
+        swm.setSelect(select);
+        swm.placeSelect(div, { inside: true, replace: true });
+
+        if (!(select.parentElement == div && !span.parentElement)) {
+          throw null;
+        }
+
+      } catch (err) {
+        if (!err) {
+          throw new Error('swm.placeSelect() with {replace, inside} should replace the element content with the select');
+        }
+
+        throw new ErrorWithArgs('swm.placeSelect() with {replace, inside} should replace the element content with the select', err);
+
+      } finally {
+        div.remove();
+      }
+    },
+  }
+
   function setup() {
     const select = document.createElement('select');
-    
+
     return { select };
   }
 
@@ -942,7 +1189,7 @@ function vOptions(options) {
 
 /*
   createSelect
-  placeSelect (without select, without arguments, with element, with selector)
+  placeSelect (without select, without arguments, with element, with selector, with bad selector, with element and selector both, with before, after, append, prepend, inside, replace, inside and replace)
   removeSelect (without select, with select)
   replaceSelect (without select, without arguments, with nodes)
   getSelect (without select, with select)

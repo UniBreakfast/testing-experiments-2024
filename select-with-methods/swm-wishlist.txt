@@ -22,8 +22,8 @@
   * hide/showSelect() with no current select element - throws an error
 
 * removeSelect()
-? placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
-? replaceSelect(?...elements)
+* placeSelect(?element | ?selector, ?{before, after, append, prepend, replace, inside})
+* replaceSelect(?...elements)
 
   * remove/replaceSelect() - removes the current select element from the DOM
   * remove/place/replaceSelect(...) with no current select element - throws an error
@@ -31,15 +31,15 @@
   * placeSelect() - places the current select element at the end of the body
   * placeSelect(element) - places the current select element at the end of the element
   * placeSelect(selector) - places the current select element at the end of the element found by the selector
-  placeSelect(selector, ...) with no element found - throws an error
-  placeSelect(element, selector) - throws an error
-  placeSelect(element/selector, {directive: !true}) - throws an error
-  placeSelect(element/selector, {before: true}) - places the current select element before the element
-  placeSelect(element/selector, {after: true}) - places the current select element after the element
-  placeSelect(element/selector, {append/inside: true}) - appends the current select element to the element
-  placeSelect(element/selector, {prepend: true}) - prepends the current select element to the element
-  placeSelect(element/selector, {replace: true}) - replaces the element with the current select element
-  placeSelect(element/selector, {replace: true, inside: true}) - replaces the element's content with the current select element
+  * placeSelect(selector, ...) with no element found - throws an error
+  * placeSelect(element, selector) - throws an error
+  * placeSelect(element/selector, {directive: !true}) - throws an error
+  * placeSelect(element/selector, {before: true}) - places the current select element before the element
+  * placeSelect(element/selector, {after: true}) - places the current select element after the element
+  * placeSelect(element/selector, {append/inside: true}) - appends the current select element to the element
+  * placeSelect(element/selector, {prepend: true}) - prepends the current select element to the element
+  * placeSelect(element/selector, {replace: true}) - replaces the element with the current select element
+  * placeSelect(element/selector, {replace: true, inside: true}) - replaces the element's content with the current select element
 
 ? createOptions(?count, ?!{ dict, values, texts, items, pairs, replace, add, before, after, select, mark, hide })
 
